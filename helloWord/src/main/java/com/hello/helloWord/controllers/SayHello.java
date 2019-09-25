@@ -1,4 +1,4 @@
-package com.hello.helloWord.controlles;
+package com.hello.helloWord.controllers;
 
 import java.time.LocalTime;
 
