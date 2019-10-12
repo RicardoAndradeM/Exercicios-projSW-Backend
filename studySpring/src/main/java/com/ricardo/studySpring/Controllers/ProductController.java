@@ -1,7 +1,9 @@
 package com.ricardo.studySpring.Controllers;
 
 import java.util.List;
-
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,11 +37,13 @@ public class ProductController {
 	}
 	
 	@GetMapping("/products/{id}")
-	public Product getProductByID(@PathVariable Long id) {
-		return this.repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
+	public Resource<Product> getProductByID(@PathVariable Long id) {
+		Product product =  this.repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
+		return new Resource<Product>(product, linkTo(methodOn(ProductController.class).getProductByID(id)).withSelfRel(),
+			    linkTo(methodOn(ProductController.class).getProducts()).withRel("employees"));
 	}
-	
 	@PutMapping("/products/{id}")
+	
 	public Product updateOrAddProduct(@PathVariable Long id, @RequestBody Product product) {
 		product.setCodigo(id);
 		System.out.println(product);
